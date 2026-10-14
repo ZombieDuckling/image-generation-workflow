@@ -11,11 +11,13 @@ These are Hermes-specific shortcuts. Ignore this file if you are a different age
 ## Direct provider probe (when the tool is unavailable)
 
 ```bash
-/Users/joshuasack/.hermes/hermes-agent/venv/bin/python - <<'PY'
-import sys, json
+HERMES="${HERMES_HOME:-$HOME/.hermes}/hermes-agent"
+"$HERMES/venv/bin/python" - <<PY
+import os, sys, json
 from importlib.util import spec_from_file_location, module_from_spec
-sys.path.insert(0, '/Users/joshuasack/.hermes/hermes-agent')
-p = '/Users/joshuasack/.hermes/hermes-agent/plugins/image_gen/openai-codex/__init__.py'
+repo = os.environ.get("HERMES_HOME", os.path.expanduser("~/.hermes")) + "/hermes-agent"
+sys.path.insert(0, repo)
+p = repo + "/plugins/image_gen/openai-codex/__init__.py"
 spec = spec_from_file_location('openai_codex_image_gen', p)
 mod = module_from_spec(spec); spec.loader.exec_module(mod)
 provider = mod.OpenAICodexImageGenProvider()
